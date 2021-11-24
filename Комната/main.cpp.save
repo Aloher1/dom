@@ -1,0 +1,111 @@
+#include "TXLib.h"
+
+bool click(int x1, int y1, int x2, int y2){
+    return (txMouseButtons() == 1 &&
+            txMouseX() > x1 &&
+            txMouseY() > y1 &&
+            txMouseX() < x2 &&
+            txMouseY() < y2);
+}
+
+/*int room(){
+        int x1, x2, y1, y2;
+        int mx1, mx2, my1, my2;
+        int t;
+        txSetFillColor(TX_WHITE);
+        txClear();
+        txSetColor(TX_BLACK, 3);
+
+        mx2 = txMouseX();
+        my2 = txMouseY();
+
+        while(click(0, 0, txGetExtentX() - 300, 800)){
+            mx1 = txMouseX();
+            my1 = txMouseY();
+            txRectangle(mx1, my1, mx2, my2);
+            x1 = mx1;   y1 = my1;
+            x2 = mx2;   y2 = my2;
+            t = 1;
+            txSleep(10);
+        }
+        if(t == 1)  txRectangle(x1, y1, x2, y2);
+
+        txSleep(10);
+}*/
+
+struct subBUTTON{
+    const char* text;
+
+    //int x;
+    //int y;
+};
+
+struct BUTTON{
+    const char* text;
+    int x;
+    int y;
+    subBUTTON subButton[10];
+    void draw(){
+        txSetColor(TX_BLACK,3);
+        txRectangle(x, y, x + 150, y + 50);
+
+        if(txMouseX() >= x && txMouseX() <= x + 150 &&
+           txMouseY() >= y && txMouseY() <= y + 50)
+            txSetColor(TX_CYAN);
+        txDrawText(x, y, x + 150, y + 50, text);
+
+    }
+};
+
+
+int main(){
+    txCreateWindow (1400, 800);
+    txTextCursor (false);
+
+    HDC sofa[2];
+    sofa[0]   = txLoadImage("диван1.bmp");
+    sofa[1]   = txLoadImage("диван2.bmp");
+    HDC table = txLoadImage("стол.bmp");
+
+    int x = 0, y = 0;
+
+    BUTTON button[5];
+    button[0] = {"мебель"};
+    button[0].x = 100;
+    button[0].y = 0;
+
+    while(!GetAsyncKeyState(VK_ESCAPE)){
+        txBegin();
+        txSetFillColor(TX_WHITE);
+        txSetColor(TX_BLACK, 3);
+        txClear();
+        button[0].draw();
+        for (int i = 0;i < 5;i++){
+
+        }
+        //Движение
+        if (click(x, y, x + 365, y + 116)){
+            txTransparentBlt (txDC(), x, y, 365, 116, sofa[0], 0, 0, TX_WHITE);
+            x = txMouseX() - 182;   y = txMouseY() - 58;
+        }
+        else{
+            txTransparentBlt (txDC(), x, y, 365, 116, sofa[0], 0, 0, TX_WHITE);
+        }
+        //Границы
+        if(x < 0)  x = 0;
+        if(y < 0)  y = 0;
+        if(x + 365 > txGetExtentX() - 300)  x = txGetExtentX() - 665;
+        if(y + 116 > txGetExtentY())        y = txGetExtentY() - 116;
+
+        //txLine(txGetExtentX() - 300, 0, txGetExtentX() - 300, 800);
+
+        //Win32::TransparentBlt (txDC(), txGetExtentX() - 290, 100, 140, 45, sofa[0], 0, 0, 365, 116, -1);
+
+        txEnd();
+        //txSleep(1);
+    }
+    txDeleteDC(sofa);
+    txDeleteDC(table);
+    return 0;
+}
+
