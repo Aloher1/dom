@@ -47,12 +47,12 @@ struct BUTTON{
     subBUTTON subButton[10];
     void draw(){
         txSetColor(TX_BLACK,3);
-        txRectangle(x, y, x + 150, y + 50);
+        txRectangle(x, y, x + 200, y + 50);
 
         if(txMouseX() >= x && txMouseX() <= x + 150 &&
            txMouseY() >= y && txMouseY() <= y + 50)
             txSetColor(TX_CYAN);
-        txDrawText(x, y, x + 150, y + 50, text);
+        txDrawText(x, y, x + 200, y + 50, text);
 
     }
 };
@@ -77,20 +77,19 @@ int main(){
     button[4] = {"мебель"};
 
     for (int i = 0;i < 5;i++){
-        button[i].x = i * 150;
+        button[i].x = i * 200;
         button[i].y = 0;
     }
-    //button[0].x = 100;
-    //button[0].y = 0;
 
     while(!GetAsyncKeyState(VK_ESCAPE)){
         txBegin();
         txSetFillColor(TX_WHITE);
         txSetColor(TX_BLACK, 3);
         txClear();
-        button[0].draw();
-        for (int i = 0;i < 5;i++){
+        // cout << button[0].x;
 
+        for (int i = 0;i < 5;i++){
+            button[i].draw();
         }
         //Движение
         if (click(x, y, x + 365, y + 116)){
