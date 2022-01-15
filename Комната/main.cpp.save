@@ -13,31 +13,6 @@ bool click(int x1, int y1, int x2, int y2){
             txMouseY() < y2);
 }
 
-/*int room(){
-        int x1, x2, y1, y2;
-        int mx1, mx2, my1, my2;
-        int t;
-        txSetFillColor(TX_WHITE);
-        txClear();
-        txSetColor(TX_BLACK, 3);
-
-        mx2 = txMouseX();
-        my2 = txMouseY();
-
-        while(click(0, 0, txGetExtentX() - 300, 800)){
-            mx1 = txMouseX();
-            my1 = txMouseY();
-            txRectangle(mx1, my1, mx2, my2);
-            x1 = mx1;   y1 = my1;
-            x2 = mx2;   y2 = my2;
-            t = 1;
-            txSleep(10);
-        }
-        if(t == 1)  txRectangle(x1, y1, x2, y2);
-
-        txSleep(10);
-}*/
-
 struct subBUTTON{
     const char* text;
 };
@@ -138,7 +113,7 @@ int main(){
     }
     obj[16].address = "Pictures\\Мебель\\стулья\\Stul1.bmp";
     obj[17].address = "Pictures\\Мебель\\стулья\\Stul2.bmp";
-    obj[18].address = "Pictures\\Мебель\\стулья\\Stul3.bmp";
+    obj[18].address = "Pictures\\Мебель\\стулobj[i].visibleья\\Stul3.bmp";
     obj[19].address = "Pictures\\Мебель\\стулья\\Stul4.bmp";
     obj[20].address = "Pictures\\Мебель\\стулья\\кресло1.bmp";
     obj[21].address = "Pictures\\Мебель\\стулья\\кресло2.bmp";
@@ -148,10 +123,11 @@ int main(){
     for(int i = 0;i < 21;i++){
         obj[i].folder  = "Мебель";
     }
-    obj[22].address = "Pictures\\Планировка\\планировка1.bmp";
-    obj[23].address = "Pictures\\Планировка\\планировка2.bmp";
+    obj[22].address = "Pictures\\Планировка\\планировка\\планировка1.bmp";
+    obj[23].address = "Pictures\\Планировка\\планировка\\планировка2.bmp";
     for(int i = 22;i < 23;i++){
         obj[i].folder = "планировка";
+        obj[i].section = "планировка";
     }
     obj[24].address = "Pictures\\Пол\\ковры\\Cover1.bmp";
     obj[25].address = "Pictures\\Пол\\ковры\\Cover2.bmp";
@@ -197,11 +173,11 @@ int main(){
 
     //Разделы
     BUTTON button[5];
-    button[0] = {"Мебель",     {{"стулья"   }, {"столы"     }, {"кровати"   }, {"диваны"}, {""}}};
-    button[1] = {"Техника",    {{"для кухни"}, {"телевизоры"}, {"компьютеры"}, {""      }, {""}}};
-    button[2] = {"Пол",        {{"паркет"   }, {"ковры"     }, {""          }, {""      }, {""}}};
-    button[3] = {"Разное",     {{"ванные"   }, {"туалеты"   }, {"декор"     }, {""      }, {""}}};
-    button[4] = {"Планировка", {{""         }, {""          }, {""          }, {""      }, {""}}};
+    button[0] = {"Мебель",     {{"стулья"    }, {"столы"     }, {"кровати"   }, {"диваны"}, {""}}};
+    button[1] = {"Техника",    {{"для кухни" }, {"телевизоры"}, {"компьютеры"}, {""      }, {""}}};
+    button[2] = {"Пол",        {{"паркет"    }, {"ковры"     }, {""          }, {""      }, {""}}};
+    button[3] = {"Разное",     {{"ванные"    }, {"туалеты"   }, {"декор"     }, {""      }, {""}}};
+    button[4] = {"Планировка", {{"планировка"}, {""          }, {""          }, {""      }, {""}}};
 
     //Координаты кнопок
     for (int i = 0;i < 5;i++){
@@ -214,7 +190,7 @@ int main(){
         txSetFillColor(TX_WHITE);
         txSetColor(TX_BLACK, 3);
         txClear();
-
+        txTransparentBlt(txDC(), 100, 100, obj[23].width, obj[23].height, obj[23].pic, 0, 0, TX_WHITE);
         //Рисование кнопок
         for (int i = 0;i < 5;i++){
 
@@ -270,21 +246,21 @@ int main(){
         if (txMouseY() >= 160 && txMouseButtons() == 1){
             chsnSection = -1;
         }
-
+        //картинки справа
         if (chsnSection >= 0){
             int z = 0;
             for (int i = 0;i < 36;i++){
                 if (chSubSection == obj[i].section ){
                     if(obj[i].width > obj[i].height)
                         Win32::TransparentBlt  (txDC(), obj[i].x, 50 + z, 150, 150 * obj[i].height/obj[i].width, obj[i].pic, 0, 0, obj[i].width, obj[i].height, TX_WHITE);
-                    else
+                    else if (obj[i].width < obj[i].height)
                         Win32::TransparentBlt  (txDC(), obj[i].x, 50 + z, 150 * obj[i].height/obj[i].width, 150, obj[i].pic, 0, 0, obj[i].width, obj[i].height, TX_WHITE);
 
-                    z = z + obj[i].height ;
+                    z = z + obj[i].height + 10;
                 }
             }
         }
-        //Движение
+
        /* if (click(x, y, x + 365, y + 116)){
             txTransparentBlt (txDC(), x, y, 365, 116, sofa[0], 0, 0, TX_WHITE);
             x = txMouseX() - 182;   y = txMouseY() - 58;
